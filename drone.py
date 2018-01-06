@@ -3,7 +3,7 @@ from Adafruit_IO import *
 import time
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 
-aio = Client('826788acf84f4e8e86a60916a08ec94e')
+aio = Client('')
 
 vehicle = connect('udp:192.168.43.2:5760',wait_ready=True)
 
