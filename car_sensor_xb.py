@@ -1,13 +1,17 @@
 #Libraries
 import RPi.GPIO as GPIO
 import time
-from Adafruit_IO import *
+from digi.xbee.devices import *
  
 #GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BOARD)
+device = XBeeDevice('/dev/ttyS0',9600)
+device.open()
 
-#aio key from io.adafruit.com
-aio = Client('')
+#Add remote xbee MAC address 
+#Example:remote_dev = RemoteXBeeDevice(device,XBee64BitAddress.from_hex_string("0013A20040D7BE36"))
+remote_dev = RemoteXBeeDevice(device,XBee64BitAddress.from_hex_string(""))
+
 #set GPIO Pins
 GPIO_TRIGGER = 12
 GPIO_ECHO = 11
@@ -45,14 +49,17 @@ def distance():
  
 if __name__ == '__main__':
     try:
-        while True:	
-		dist = distance()
-		if dist > 30:
-            		print ("Measured Distance = %.1f cm" % dist)
-            		time.sleep(1)
-			data = aio.send('ultrasonic',1)
-		else:
-			data = aio.send('ultrasonic',0)
+        while True:
+            dist = distance()
+            if dist > 30:
+                print ("Measured Distance = %.1f cm" % dist)
+                print ("Free Slot available")
+                time.sleep(1)
+                device.send_data(remote_dev, data = "Free Slot")
+            else:
+                print("Car engaged")
+                time.sleep(1)
+                continue
 
         # Reset by pressing CTRL + C
     except KeyboardInterrupt:
