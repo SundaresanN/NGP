@@ -5,7 +5,7 @@ from dronekit import connect, VehicleMode, LocationGlobalRelative
 
 aio = Client('')
 
-vehicle = connect('udp:192.168.43.2:5760',wait_ready=True)
+vehicle = connect('/dev/ttyS0',baud=57600 ,wait_ready=True)
 
 
 def takeoff(aTargetAltitude):
@@ -50,11 +50,11 @@ def land():
         	time.sleep(1)
 
 while vehicle.is_armable:
-	data = aio.receive('led')
+	data = aio.receive('drone')
 	if data.value == "1":
-		takeoff(10)
+		takeoff(2)
 		print('Hovering')
-		time.sleep(10)
+		time.sleep(5)
 		print('Landing Now')
 		land()
 		break
